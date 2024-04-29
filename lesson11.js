@@ -193,17 +193,17 @@ function checkGuess() {
     for (let i = 0; i < guess.length; i++) {
         if (guess[i] === worlde[i]) {
             resultArray.push('correct');
-            worlde[i] = null; // Mark the corresponding letter in the Wordle word as used
+            worlde[i] = null;
         } else if (worlde.includes(guess[i])) {
             resultArray.push('present');
-            wordleGuessed = false; // If a letter is present but not in the correct position, wordle is not completely guessed
+            wordleGuessed = false;
         } else {
             resultArray.push('absent');
-            wordleGuessed = false; // If a letter is absent, wordle is not completely guessed
+            wordleGuessed = false; 
         }
     }
 
-    return { resultArray, wordleGuessed }; // Return both resultArray and the flag indicating if the Wordle word is completely guessed
+    return { resultArray, wordleGuessed }; 
 }
 
     updateDisplay(resultArray, result);
