@@ -157,6 +157,7 @@ function checkGuess() {
         if (isValid(currentGuess)) {
             // @TO-DO: evaluate the guess against the Wordle word
             console.log('Ready to evaluate', currentGuess);
+            evaluateGuess();
         } else {
             document
                 .querySelector(`#row-${currentTile.row}`)
@@ -169,6 +170,102 @@ function checkGuess() {
         }
     }
 }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+//  Pracitce 2: Evaluate wordle guess
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/**
+ * Evaluates a guessed word letter by letter to see if it is correct, present or absent
+ * @param {array} currentWordArray (needs access to this global)
+ */
+ function evaluateGuess() {
+       
+    // Make a copy of both the current wordle word and the current guess
+    let worlde = [...wordleWord];
+    let guess = [...currentGuess];
+    // starting values
+    let resultArray = ['absent', 'absent', 'absent', 'absent', 'absent'];
+    let wordleGuessed = true;
+
+    // code to update resultArray as we evalute the guess
+    // result will be based on if it's all correct or not
+
+    for (let i = 0; i < guess.length; i++) {
+        if (guess[i] === worlde[i]) {
+            resultArray.push('correct');
+            worlde[i] = null; // Mark the corresponding letter in the Wordle word as used
+        } else if (worlde.includes(guess[i])) {
+            resultArray.push('present');
+            wordleGuessed = false; // If a letter is present but not in the correct position, wordle is not completely guessed
+        } else {
+            resultArray.push('absent');
+            wordleGuessed = false; // If a letter is absent, wordle is not completely guessed
+        }
+    }
+
+    return { resultArray, wordleGuessed }; // Return both resultArray and the flag indicating if the Wordle word is completely guessed
+}
+
+    updateDisplay(resultArray, result);
+    handleResult(result);
+
+/**
+ * Update display after word guessed
+ * @param {array} resultArray
+ * @param result
+ */
+ function updateDisplay(resultArray, result) {
+ // Change color of the tiles
+    const rows = document.querySelectorAll('.tiles > div');
+    rows.forEach((row, index) => {
+        const tiles = row.querySelectorAll('.tile');
+        tiles.forEach((tile, i) => {
+            tile.classList.remove('correct', 'present', 'absent');
+            if (resultArray[index] === 'correct' && i < resultArray.length) {
+                tile.classList.add('correct');
+            } else if (resultArray[index] === 'present' && i < resultArray.length) {
+                tile.classList.add('present');
+            } else if (resultArray[index] === 'absent' && i < resultArray.length) {
+                tile.classList.add('absent');
+            }
+        });
+    });
+
+    // Change color of the keys
+    const keys = document.querySelectorAll('.keys .key');
+    keys.forEach((key) => {
+        const letter = key.textContent;
+        if (currentGuess.includes(letter)) {
+            key.classList.add('used');
+        } else {
+            key.classList.remove('used');
+        }
+    });
+        
+ }
+
+/**
+ * Determines if we are still playing or game is over (won or lost)
+ * @param result
+ */
+ function handleResult(result) {
+    // did the user guess the wordle? - game over - module
+    // did the user use up their last row? - game over - module
+    // OR did we go on to the next guess
+    const isWordleGuessed = resultArray.every((result) => result === 'correct');
+    const isLastRowUsed = currentTile.row === 6;
+
+    if (isWordleGuessed) {
+        gameOver('You guessed the Wordle! 🎉');
+    } else if (isLastRowUsed) {
+        gameOver('You used up all your guesses. The Wordle was not guessed.');
+    } else {
+        // Proceed to the next guess
+        resetInterfaceForNextGuess();
+    }
+}
+
+
 /**
  * Determines if the current guess is a word recognized as a guess by Wordle
  * @param {array} currentWord

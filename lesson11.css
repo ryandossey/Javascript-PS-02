@@ -127,7 +127,7 @@ h1 {
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    NOTICE
+    NOTICE and modal
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 .notice {
     opacity: 0;
@@ -144,6 +144,41 @@ h1 {
     left: calc(50% - 105px);
     z-index: 100;
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    MODAL - notice .open already exists under NOTICE - delete that one, keep this one
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+.modal-outer {
+    display: grid;
+    background: rgba(237, 237, 237, 0.7);
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    /* Hide this modal until we need it */
+    pointer-events: none;
+}
+
+.modal-inner {
+    max-width: 600px;
+    min-width: 400px;
+    padding: 2rem;
+    border-radius: 6px;
+    min-height: 200px;
+    background: white;
+    box-shadow: 1px 1px 1px lightgrey;
+}
+
+.modal-outer.open .modal-inner {
+    transform: translateY(0);
+}
+
+/* needs to be at the end of the modal / notice CSS section */
 
 .open {
     opacity: 1;
